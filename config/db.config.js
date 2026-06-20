@@ -20,6 +20,7 @@ console.log("DB_SERVER =", process.env.DB_SERVER);
 console.log("DB_NAME =", process.env.DB_NAME);
 console.log("DB_PASSWORD exists =", process.env.DB_PASSWORD);
 console.log("DB_PASSWORD length =", process.env.DB_PASSWORD?.length);
+console.log("DB_SERVER raw =", JSON.stringify(process.env.DB_SERVER));
 
 module.exports = {
     sql,
