@@ -1,3 +1,5 @@
+console.log("db.config.js loaded");
+
 require('dotenv').config();
 const sql = require('mssql');
 
