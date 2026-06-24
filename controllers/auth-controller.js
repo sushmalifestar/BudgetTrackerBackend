@@ -6,6 +6,11 @@ const registerUser = async (req, res) => {
         res.status(201).json(result);
     } catch (error) {
         console.log(error);
+        if ( error.message ==='Email already exists') {
+            return res.status(409).json({
+                message: error.message
+            });
+        }
         res.status(500).json({
             message: error.message
         });
