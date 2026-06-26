@@ -7,7 +7,7 @@ const getCategories = async (userId, categoryType) => {
         .input('userId', sql.Int, userId)
         .input('categoryType', sql.NVarChar, categoryType)
         .query(`
-            SELECT categoryId, categoryName, categoryType FROM Categories
+            SELECT categoryId, categoryName, userId, categoryType FROM Categories
             WHERE categoryType = @categoryType AND (userId IS NULL OR userId = @userId)
             ORDER BY categoryName
         `);
