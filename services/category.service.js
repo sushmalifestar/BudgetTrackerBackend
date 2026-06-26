@@ -15,7 +15,6 @@ const getCategories = async (userId, categoryType) => {
 };
 
 const addCategory = async (categoryName, categoryType,userId) => {
-
     const pool = await sql.connect(config);
     const result = await pool.request()
         .input('categoryName', sql.NVarChar, categoryName)
@@ -29,6 +28,21 @@ const addCategory = async (categoryName, categoryType,userId) => {
     return result.recordset[0];
 };
 
+const updateCategory = async (categoryId, categoryName, userId) => {
+    const pool = await sql.connect(config);
+    await pool.request()
+        .input('categoryId', sql.Int, categoryId)
+        .input('categoryName', sql.NVarChar, categoryName)
+        .input('userId', sql.Int, userId)
+        .query(`
+            UPDATE Categories
+            SET categoryName = @categoryName
+            WHERE categoryId = @categoryId
+            AND userId = @userId
+        `);
+    return { message: 'Category updated successfully' };
+};
+
 module.exports = {
-    getCategories,addCategory
+    getCategories,addCategory,updateCategory
 };

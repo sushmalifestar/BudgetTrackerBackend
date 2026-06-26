@@ -30,6 +30,22 @@ const addCategory = async (req, res) => {
     }
 };
 
+const updateCategory = async (req, res) => {
+    try {
+        const result = await categoryService.updateCategory(
+            req.params.id,
+            req.body.categoryName,
+            req.user.userId
+        );
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
-    getCategories,addCategory
+    getCategories,addCategory,updateCategory
 };
