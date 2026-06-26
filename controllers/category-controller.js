@@ -55,6 +55,11 @@ const deleteCategory = async (req, res) => {
         res.status(200).json(result);
     } catch (error) {
         console.log(error);
+        if (error.message === 'This category is already used in transactions and cannot be deleted.') {
+            return res.status(409).json({
+                message: error.message
+            });
+        }
         res.status(500).json({
             message: error.message
         });
