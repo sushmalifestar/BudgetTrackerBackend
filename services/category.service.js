@@ -14,7 +14,7 @@ const getCategories = async (userId, categoryType) => {
     return result.recordset;
 };
 
-const addCategory = async (categoryName, categoryType,userId) => {
+const addCategory = async (categoryName, categoryType, userId) => {
     const pool = await sql.connect(config);
     const result = await pool.request()
         .input('categoryName', sql.NVarChar, categoryName)
@@ -43,6 +43,39 @@ const updateCategory = async (categoryId, categoryName, userId) => {
     return { message: 'Category updated successfully' };
 };
 
+const deleteCategory = async (categoryId, userId) => {
+    const pool = await sql.connect(config);
+    const income = await pool.request()
+        .input('categoryId', sql.Int, categoryId)
+        .query(`SELECT 1 FROM Income WHERE categoryId = @categoryId`)
+    if (income.recordset.length > 0) {
+        throw new Error('This category is already used in transactions and cannot be deleted.');
+    }
+    const expenses = await pool.request()
+        .input('categoryId', sql.Int, categoryId)
+        .query('SELECT 1 FROM Expenses WHERE categoryId = @categoryId');
+    if (expenses.recordset.length > 0) {
+        throw new Error('This category is already used in transactions and cannot be deleted.');
+    }
+    const savings = await pool.request()
+        .input('categoryId', sql.Int, categoryId)
+        .query('SELECT 1 FROM Savings WHERE categoryId = @categoryId');
+    if (savings.recordset.length > 0) {
+        throw new Error('This category is already used in transactions and cannot be deleted.');
+    }
+    await pool.request()
+        .input('categoryId', sql.Int, categoryId)
+        .input('userId', sql.Int, userId)
+        .query(`
+    DELETE FROM Categories
+    WHERE categoryId = @categoryId
+    AND userId = @userId
+`);
+    return {
+        message: 'Category deleted successfully'
+    };
+}
+
 module.exports = {
-    getCategories,addCategory,updateCategory
+    getCategories, addCategory, updateCategory, deleteCategory
 };

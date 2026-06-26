@@ -46,6 +46,21 @@ const updateCategory = async (req, res) => {
     }
 };
 
+const deleteCategory = async (req, res) => {
+    try {
+        const result = await categoryService.deleteCategory(
+            req.params.id,
+            req.user.userId
+        );
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
-    getCategories,addCategory,updateCategory
+    getCategories,addCategory,updateCategory,deleteCategory
 };
